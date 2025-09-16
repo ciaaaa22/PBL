@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,45 +14,39 @@
           integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
           crossorigin="anonymous">
 </head>
-
 <body class="bg-gray-100">
 
 <div class="container mx-auto mt-10 mb-10 px-10">
+
+    <!-- Header -->
     <div class="grid grid-cols-8 gap-4 mb-4 p-5">
-
-        <!-- Judul -->
         <div class="col-span-4 mt-2">
-            <h1 class="text-3xl font-bold">
-                DAFTAR MAHASISWA
-            </h1>
+            <h1 class="text-3xl font-bold">DAFTAR MAHASISWA</h1>
         </div>
-
-        <!-- Tombol Tambah -->
         <div class="col-span-4">
             <div class="flex justify-end">
                 <a href="{{ route('mahasiswa.create') }}"
-                   id="add-mahasiswa-btn"
                    class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs 
                           leading-tight uppercase rounded-full shadow-md 
                           hover:bg-blue-700 hover:shadow-lg 
                           focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 
                           active:bg-blue-800 active:shadow-lg 
                           transition duration-150 ease-in-out">
-                   Tambah Mahasiswa
+                    Tambah Mahasiswa
                 </a>
             </div>
         </div>
     </div>
 
     <!-- Flash Message -->
-    <div class="bg-white p-5 rounded shadow-sm">
-        @if (session('success'))
-            <div class="p-3 rounded bg-green-500 text-green-100 mb-4">
-                {{ session('success') }}
-            </div>
-        @endif
+    @if (session('success'))
+        <div class="p-3 rounded bg-green-500 text-white mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
 
-        <!-- Tabel -->
+    <!-- Table -->
+    <div class="bg-white p-5 rounded shadow-sm">
         <div class="relative overflow-x-auto">
             <table class="table table-bordered w-full text-sm text-left text-gray-500">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -61,8 +54,8 @@
                         <th class="px-6 py-3">No</th>
                         <th class="px-6 py-3">NIM</th>
                         <th class="px-6 py-3">Nama</th>
-                        <th class="px-6 py-3">Jurusan</th>
-                        <th class="px-6 py-3">Angkatan</th>
+                        <th class="px-6 py-3">Kelas</th>
+                        <th class="px-6 py-3">Prodi</th>
                         <th class="px-6 py-3">Action</th>
                     </tr>
                 </thead>
@@ -72,31 +65,29 @@
                             <td class="px-6 py-4">{{ $loop->iteration }}</td>
                             <td class="px-6 py-4">{{ $mhs->nim }}</td>
                             <td class="px-6 py-4">{{ $mhs->nama }}</td>
-                            <td class="px-6 py-4">{{ $mhs->jurusan }}</td>
-                            <td class="px-6 py-4">{{ $mhs->angkatan }}</td>
+                            <td class="px-6 py-4">{{ $mhs->kelas }}</td>
+                            <td class="px-6 py-4">{{ $mhs->prodi }}</td>
                             <td class="px-6 py-4">
-                                <form onsubmit="return confirm('Apakah Anda Yakin ?');" 
-                                      action="{{ route('mahasiswa.destroy', $mhs) }}" 
-                                      method="POST" class="inline">
+                                <form onsubmit="return confirm('Apakah Anda yakin?');"
+                                      action="{{ route('mahasiswa.destroy', $mhs->id) }}"
+                                      method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
 
                                     <!-- View -->
-                                    <a href="{{ route('mahasiswa.show', $mhs) }}" 
+                                    <a href="{{ route('mahasiswa.show', $mhs->id) }}"
                                        class="btn btn-success btn-sm">
                                         View
                                     </a>
 
                                     <!-- Edit -->
-                                    <a href="{{ route('mahasiswa.edit', $mhs) }}" 
-                                       id="{{ $mhs->id }}-edit-btn"
+                                    <a href="{{ route('mahasiswa.edit', $mhs->id) }}"
                                        class="btn btn-primary btn-sm">
                                         Edit
                                     </a>
 
                                     <!-- Delete -->
                                     <button type="submit"
-                                            id="{{ $mhs->id }}-delete-btn"
                                             class="btn btn-danger btn-sm">
                                         Delete
                                     </button>
