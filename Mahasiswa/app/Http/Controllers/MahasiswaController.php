@@ -20,7 +20,7 @@ class MahasiswaController extends Controller
     {
 
         // menampilkan form create.blade.php
-        return view('create');
+        return view('mahasiswa.create');
 
     }
 
