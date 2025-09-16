@@ -1,0 +1,14 @@
+@foreach ($mahasiswa as $mhs)
+<tr>
+    <td>{{ $mhs->nim }}</td>
+    <td>{{ $mhs->nama_mahasiswa }}</td>
+    <td>{{ $mhs->email }}</td>
+    <td>
+        <form action="{{ route('mahasiswa.destroy', $mhs->id) }}" method="POST" onsubmit="return confirm('Yakin mau hapus data ini?')">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+        </form>
+    </td>
+</tr>
+@endforeach
