@@ -18,7 +18,10 @@ class MahasiswaController extends Controller
     // Menampilkan form tambah mahasiswa
     public function create(): View
     {
-        return view('mahasiswa.create');
+
+        // menampilkan form create.blade.php
+        return view('create');
+
     }
 
     // Menyimpan data mahasiswa baru
