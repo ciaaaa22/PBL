@@ -3,79 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Mahasiswa</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Data Mahasiswa</title>
+
+    <!-- Tailwind -->
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+          crossorigin="anonymous">
 </head>
-<body style="background: lightgray">
+<body class="bg-gray-100">
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-12">
+<div class="container mx-auto mt-10 mb-10 px-10">
 
-            {{-- Notifikasi sukses --}}
-            @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            <div class="card border-0 shadow-sm rounded">
-                <div class="card-body">
-                    <h3 class="mb-4">Daftar Mahasiswa</h3>
-
-                    {{-- Tombol Tambah Mahasiswa --}}
-                    <a href="{{ route('mahasiswa.create') }}" class="btn btn-md btn-success mb-3">+ Tambah Mahasiswa</a>
-
-                    {{-- Tabel Data --}}
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>NIM</th>
-                                <th>Nama</th>
-                                <th>Kelas</th>
-                                <th>Prodi</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($mahasiswas as $index => $mhs)
-                                <tr>
-                                    <td>{{ $mahasiswas->firstItem() + $index }}</td>
-                                    <td>{{ $mhs->nim }}</td>
-                                    <td>{{ $mhs->nama }}</td>
-                                    <td>{{ $mhs->kelas }}</td>
-                                    <td>{{ $mhs->prodi }}</td>
-                                    <td>
-                                        <a href="{{ route('mahasiswa.show', $mhs->id) }}" class="btn btn-sm btn-info">Detail</a>
-                                        <a href="{{ route('mahasiswa.edit', $mhs->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                        <form action="{{ route('mahasiswa.destroy', $mhs->id) }}" method="POST" style="display:inline-block">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin hapus data ini?')">Hapus</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="text-center">Belum ada data mahasiswa</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-
-                    {{-- Pagination --}}
-                    <div class="mt-3">
-                        {{ $mahasiswas->links() }}
-                    </div>
-
-                </div>
-            </div>
-
+    <!-- Header -->
+    <div class="grid grid-cols-8 gap-4 mb-4 p-5">
+        <div class="col-span-4 mt-2">
+            <h1 class="text-3xl font-bold">DAFTAR MAHASISWA</h1>
         </div>
+        <div class="col-span-4">
+            <div class="flex justify-end">
+                <a href="{{ route('mahasiswa.create') }}"
+                   class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs 
+                          leading-tight uppercase rounded-full shadow-md 
+                          hover:bg-blue-700 hover:shadow-lg 
+                          focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 
+                          active:bg-blue-800 active:shadow-lg 
+                          transition duration-150 ease-in-out">
+                    Tambah Mahasiswa
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flash Message -->
+    @if (session('success'))
+        <div class="p-3 rounded bg-green-500 text-white mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <!-- Table -->
+    <div class="bg-white p-5 rounded shadow-sm">
+        <div class="relative overflow-x-auto">
+            <table class="table table-bordered w-full text-sm text-left text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3">No</th>
+                        <th class="px-6 py-3">NIM</th>
+                        <th class="px-6 py-3">Nama</th>
+                        <th class="px-6 py-3">Kelas</th>
+                        <th class="px-6 py-3">Prodi</th>
+                        <th class="px-6 py-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($mahasiswa as $mhs)
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4">{{ $loop->iteration }}</td>
+                            <td class="px-6 py-4">{{ $mhs->nim }}</td>
+                            <td class="px-6 py-4">{{ $mhs->nama }}</td>
+                            <td class="px-6 py-4">{{ $mhs->kelas }}</td>
+                            <td class="px-6 py-4">{{ $mhs->prodi }}</td>
+                            <td class="px-6 py-4">
+                                <form onsubmit="return confirm('Apakah Anda yakin?');"
+                                      action="{{ route('mahasiswa.destroy', $mhs->id) }}"
+                                      method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <!-- View -->
+                                    <a href="{{ route('mahasiswa.show', $mhs->id) }}"
+                                       class="btn btn-success btn-sm">
+                                        View
+                                    </a>
+
+                                    <!-- Edit -->
+                                    <a href="{{ route('mahasiswa.edit', $mhs->id) }}"
+                                       class="btn btn-primary btn-sm">
+                                        Edit
+                                    </a>
+
+                                    <!-- Delete -->
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center text-sm text-gray-900 px-6 py-4">
+                                Data Mahasiswa Kosong
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-3">
+        {{ $mahasiswa->links() }}
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
